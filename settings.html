@@ -1,0 +1,151 @@
+<!-- power reset or unknown upload mode -->
+<!DOCTYPE html lang="en">
+<html>
+<head>
+<script>
+	var 
+		calDisplay = 0;
+</script>
+<meta name="viewport"
+	content="width=device-width,
+	initial-scale=1.0,
+	user-scalable=0,
+	minimum-scale=1.0,
+	maximum-scale=1.0">
+<meta http-equiv="content-type" content="text/html;charset=utf-8">	
+<title>Settings</title>
+<link rel="stylesheet" href="jquery.mobile-1.4.0.min.css" />
+<link rel="stylesheet" href="vqd.mobile.css" />
+<link rel="stylesheet" href="vqd.tableLayout.css" />
+
+<script src="jquery-1.10.2.min.js"></script>
+<script src="jquery.mobile-1.4.0.min.js"></script>
+<script src="vqd.js"></script>
+<style>
+* {
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.nowrap{white-space:nowrap;}
+.ui-page { -webkit-backface-visibility: hidden; }
+ div.titleBox.tap {background-color: #7ACEFF;}
+.box3PerRow { top: -5px;float: left;margin: 0;position: relative;width: 4em; /* control the width */
+   padding-bottom: 24%; /* control the height */ 
+}
+input.centerText{text-align: center;background-color:#ededed;text-shadow:none;color:#333!important}
+#Calculator{width:225px; margin-left: auto; margin-right: auto;} 
+#KeypadContent{padding-top:0}
+#KeypadContainer{width:186px;padding:0}
+#KeypadDisplay{font-size:x-large}
+
+
+#TableNumList{margin-top:0}
+</style>
+</head>
+<body>
+	<!-- Start of first page -->
+	<div data-role="page" id="page1" data-title="Settings" data-theme="b">
+
+<!-- 	    panelStoreName	     -->
+		<div data-role="panel" id="panelStoreName" data-position="right">
+	        <!-- panel content goes here -->
+	        <p>Which store is this device used for?</p>
+			<div id="StoreNameInterface" data-role="collapsible" data-inset="false" data-theme="a" data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
+			    <h3>Phở Nam</h3>
+			    <ul data-role="listview">
+			        <li><a href="#" onclick="return SaveStoreName(1, 'Sunyvale');">Sunyvale</a></li>
+			        <li><a href="#" onclick="return SaveStoreName(2, 'Santa Clara');">Santa Clara</a></li>
+			        <li><a href="#" onclick="return SaveStoreName(3, 'Mercedes');">Mercedes</a></li>
+			    </ul>
+			</div><!-- /collapsible -->
+	    </div><!-- /panel -->
+	    
+<!-- 	    panelNumTable	     -->	
+		<div data-role="panel" id="panelNumTable" data-position="right">
+	        <!-- panel content goes here -->
+			<div  id="KeypadContent">
+				<div id="Calculator">
+					<div class="wrap" id="TableNumList">
+						<p>Total number of tables in this store:</p>
+						<!-- Define calculator-like buttons list: -->
+						<div id="KeypadContainer" style="ui-field-contain;padding-left:3px;">
+							<input name="KeypadDisplay" id="KeypadDisplay" value="" maxlength="3" placeholder="# of tables" class="centerText"/>
+						</div>
+						<script>
+							$( "#TableNumList" ).append( generatePhoneKeypad() );
+						</script>
+						
+					</div>		
+				</div>
+				<div style="margin:0 18px;padding-left:3px;">
+	       			<a onclick="setLocalNumberOfTables($('#KeypadDisplay').val());return true;"
+	       			 style="margin-right:15px;" href="#panelNumTable" data-rel="close" data-role="button"
+	       			 data-theme="a" data-icon="check" data-inline="false">Save</a>
+       			</div>
+			</div><!-- /content -->
+		        
+	    </div><!-- /panel -->
+	    
+	    
+<!-- 	    panelViewAll	     -->	
+		<div data-role="panel" id="panelViewAll" data-position="right">
+	        <!-- panel content goes here -->
+			<div  id="ViewAllContent">
+<ul data-role="listview" data-inset="true" data-divider-theme="a" data-theme="a">
+    <li data-role="list-divider">Store id</li>
+    <li><span id="ShowStoreId"></span></li>
+    <li data-role="list-divider">Store name</li>
+    <li><span id="ShowStoreName"></span></li>
+    <li data-role="list-divider">Number of tables</li>
+    <li><span id="ShowNumberOfTables"></span></li>
+</ul>	
+				
+				<div style="margin:0 18px;padding-left:3px;">
+	       			<a href="#panelViewAll" data-rel="close" data-role="button"
+	       			 data-theme="a" data-icon="delete" data-inline="false">Close</a>
+       			</div>
+			</div><!-- /content -->
+		        
+	    </div><!-- /panel -->
+	    
+		<div data-role="header" data-position="fixed">
+			<h1>Settings</h1>
+		</div>
+		<!-- /header -->
+		<div data-role="content">
+			<div class="wrap" id="TableList">
+				<p>Settings on this screen is for this particular restaurant only.</p>
+				
+				<p>
+				    <a href="#panelStoreName" data-role="button" data-icon="arrow-r" data-iconpos="right" data-theme="a">Set store name</a>
+				    <a href="#panelNumTable" data-role="button" data-icon="arrow-r" data-iconpos="right" data-theme="a">Set number of tables</a>
+								
+					<a href="table.html" data-role="button" data-theme="a" data-icon="back" data-inline="false">Return to Ordering</a>
+				</p>
+				
+				<p>
+				    <a href="#panelViewAll" data-role="button" data-icon="info" data-iconpos="left" data-theme="a">View store settings</a>
+				</p>
+			</div>
+			<!-- /#wrap -->
+		</div>
+		<!-- /content -->
+	</div>
+	<!-- /page -->
+
+
+<script>
+
+$(document).ready(function () {
+	$( "div.calculator" ).bind( "tap", calculatorHandler );
+	$( "div:jqmData(role='page')" ).append( generateFixedFooter() );	
+	$( "#StoreNameInterface" ).collapsible( "expand" );
+	$( "#panelViewAll" ).on( "panelopen", function( event, ui ) {
+		$( "#ShowStoreId" ).text(getStoreId());
+		$( "#ShowStoreName" ).text(getStoreName());
+		$( "#ShowNumberOfTables" ).text(getNumberOfTables());
+	});
+});
+
+</script>
+</body>
+</html>

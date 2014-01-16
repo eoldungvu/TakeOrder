@@ -1,0 +1,192 @@
+
+<!DOCTYPE html lang="en">
+<html>
+<head>
+<script>
+	var 
+		curTable = 0,
+		calDisplay = 0;
+</script>
+<meta name="viewport"
+	content="width=device-width,
+	initial-scale=1.0,
+	user-scalable=0,
+	minimum-scale=1.0,
+	maximum-scale=1.0">
+<meta http-equiv="content-type" content="text/html;charset=utf-8">	
+<title>Taking order</title>
+<link rel="stylesheet" href="jquery.mobile-1.4.0.min.css" />
+<link rel="stylesheet" href="vqd.mobile.css" />
+<link rel="stylesheet" href="vqd.tableLayout.css" />
+
+<script src="jquery-1.10.2.min.js"></script>
+<script src="jquery.mobile-1.4.0.min.js"></script>
+<script src="vqd.js"></script>
+<style>
+* {
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.ui-page { -webkit-backface-visibility: hidden; }
+ div.titleBox.tap {background-color: #7ACEFF;}
+.box3PerRow { top: -5px;float: left;margin: 0;position: relative;width: 4em; /* control the width */
+   padding-bottom: 24%; /* control the height */ 
+}
+input.centerText{text-align: center;background-color:#ededed;text-shadow:none;color:#333!important}
+#Calculator{width:225px; margin-left: auto; margin-right: auto;} 
+#NumGuestsContent{padding-top:0}
+#NumList{margin-top:0}
+#KeypadContainer{width:186px;padding:0}
+#KeypadDisplay{font-size:x-large}
+
+.ui-collapsible-content {padding:.05em .3em}
+</style>
+</head>
+<body>
+	<!-- Start of first page -->
+	<div data-role="page" id="page1" data-title="Choose Table" data-theme="b">
+		<div data-role="panel" id="panelAbout">
+	        <!-- panel content goes here -->
+ 				<h1>Help</h1>
+	        <p>This food-ordering application is designed by Dung Vu for Phở Nam.</p>
+	        <p>To take order:</p>
+	        <ol>
+	        	<li>Select a table
+	        	<li>Select number guests in the table
+	        	<li>Select dishes/beverages
+	        	<li>Confirm selection
+	        	<li>Place the order
+	        </ol>
+<!-- 	        <input name="numTable" value="32">
+		        <a href="#" data-role="button" data-theme="b" data-inline="true" 
+		        onclick="tt();return false;">set</a>
+	        
+	       		<a href="#" data-role="button" data-theme="a" data-inline="true" 
+	       		onclick="re_generateTableList();return false;">read</a>
+ -->	        <a href="#panelAbout" data-rel="close" data-role="button" data-theme="a" data-icon="delete" data-inline="true">Close Help panel</a>
+
+			<div style="margin-top:14em;"><a href="settings.html" data-role="button" data-theme="a" data-icon="forward" data-iconpos="left" data-transition="slide">Settings</a></div>
+
+	    </div><!-- /panel -->
+	    
+	    <div data-role="panel" id="panelTest" data-position="right" data-display="push">
+	    <!-- panel content goes here -->
+	        <p>This taking-order application is designed by Dung Vu for Phở Nam.</p>
+	    </div><!-- /panel -->
+	    
+		<div data-role="header" data-position="fixed">
+			<a href="#panelAbout" data-icon="bars"><img src="images/ic_bowl.png" width="22px" height="22px"/></a>
+			
+			<h1>Take order for table</h1>
+		</div>
+		<!-- /header -->
+		<div data-role="content">
+			<div class="wrap" id="TableList">
+				<!-- Define all of the tiles: -->
+				<script>
+					$( "#TableList" ).append( generateTableList() );
+				</script>
+			</div>
+			<!-- /#wrap -->
+						
+		</div>
+		<!-- /content -->
+	</div>
+	<!-- /page -->
+
+	<!-- Start of second page: Choose number of guests -->
+	<div data-role="page" id="page2" data-title="Number of Guests" data-theme="b">
+
+		<div data-role="header" data-position="fixed">
+			<a href="#" data-icon="carat-l" data-rel="back" data-transition="slide">&nbsp;</a>
+			<h1 id="GuestCount"></h1>
+			<a href="#page3" data-icon="carat-r" data-iconpos="right" data-transition="slide">&nbsp;</a>
+		</div>
+		<!-- /header -->
+
+		<div data-role="content" id="NumGuestsContent">
+			<div id="Calculator">
+				<div class="wrap" id="NumList">
+				
+					<!-- Define calculator-like buttons list: -->
+					<div data-role="fieldcontain" id="KeypadContainer" style="padding-left:3px;">
+						<input name="KeypadDisplay" id="KeypadDisplay" value="" maxlength="3" placeholder="# of guests" class="centerText"/>
+					</div>
+					<script>
+						$( "#NumList" ).append( generatePhoneKeypad() );
+					</script>
+					
+				</div>		
+			</div>
+			<!-- Button to transit to page 3: choose dishes -->
+			<a href="#page3" data-role="button" data-theme="a" data-icon="carat-r" data-iconpos="right" data-transition="slide">Select dishes</a>
+			<!-- Button to transit to page 1: select table -->
+			<a href="#page1" data-role="button" data-theme="a" data-icon="carat-l" data-iconpos="left" data-transition="slide">Select table</a>
+		</div>
+		<!-- /content -->
+	</div>
+	<!-- /page -->
+
+	<!-- Start of third page: choose dishes -->
+	<div data-role="page" id="page3" data-title="Choose Dishes" data-theme="b">
+
+		<div data-role="header" data-position="fixed">
+			<a href="#" data-icon="carat-l" data-rel="back" data-transition="slide">&nbsp;</a>
+			<h1>Choose Dishes</h1>
+		</div>
+		<!-- /header -->
+
+		<div data-role="content">
+			<div data-role="collapsible-set" data-theme="c" data-content-theme="a" data-mini="true">
+				<script>
+				</script>
+				<div data-role="collapsible">
+					<h3>Pho</h3>
+					<ul data-role="listview" data-inset="true">
+					<li><a href="index.html" style="padding-left:4px">Bi, Cha, Thit Nuong</a></li>
+					<li><a href="index.html">Ga Nuong</a></li>
+					<li><a href="index.html">BMW</a></li>
+					<li><a href="index.html">Cadillac</a></li>
+					<li><a href="index.html">Ferrari</a></li>
+					</ul>
+				</div>
+				<div data-role="collapsible">
+					<h3>Com</h3>
+					<ul data-role="listview" data-inset="true">
+					<li><a href="index.html" style="padding-left:4px">Tam, Bi, Cha, Thit Nuong<span class="ui-li-count">$7.60</></a></li>
+					<li><a href="index.html">Bo <span class="ui-li-count">$6.99</span></a></li>
+					</ul>
+				</div>
+				<div data-role="collapsible">
+					<h3>Beverages</h3>
+					<ul data-role="listview" data-inset="true">
+					<li><a href="index.html" style="padding-left:4px">Acura</a></li>
+					<li><a href="index.html">Audi</a></li>
+					<li><a href="index.html">BMW</a></li>
+					<li><a href="index.html">Cadillac</a></li>
+					<li><a href="index.html">Ferrari</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- /content -->
+
+	</div>
+
+<script>
+
+// sample locate node by attribute: $("div:jqmData(role='page')")
+
+
+$(document).ready(function () {
+	$( "div.select_table" ).bind( "tap", tableHandler );
+	$( "div.calculator" ).bind( "tap", calculatorHandler );
+
+	$("div:jqmData(role='page')").append( generateFixedFooter() ); //footer
+
+	initNumberOfTables();
+		
+});
+
+</script>
+</body>
+</html>
